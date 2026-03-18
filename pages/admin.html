@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quan Tri | VitaTrack</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar"></aside>
+  <header class="header" id="header"></header>
+  <main class="main-content" id="mainContent">
+    <div class="page-container fade-in">
+
+      <div class="page-header">
+        <h1 class="page-title">Quan Tri He Thong</h1>
+        <p class="page-subtitle">Quan ly nguoi dung, thuc pham va kiem soat he thong</p>
+      </div>
+
+      <!-- Admin Stats -->
+      <div class="admin-stats">
+        <div class="card stat-card">
+          <div class="stat-icon green">👤</div>
+          <div class="stat-value" id="stat-total-users">--</div>
+          <div class="stat-label">Tong nguoi dung</div>
+          <div class="stat-change positive">+12 tuan nay</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon blue">👨‍⚕️</div>
+          <div class="stat-value" id="stat-experts">--</div>
+          <div class="stat-label">Chuyen gia</div>
+          <div class="stat-change">3 cho duyet</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon orange">🥗</div>
+          <div class="stat-value" id="stat-foods">--</div>
+          <div class="stat-label">Thuc pham trong CSDL</div>
+          <div class="stat-change positive">+28 thang nay</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon green">📊</div>
+          <div class="stat-value" id="stat-dau">98.5%</div>
+          <div class="stat-label">Uptime he thong</div>
+          <div class="stat-change positive">Hoat dong tot</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="meal-tabs" style="margin-bottom:20px">
+        <div class="meal-tab active" id="tab-users-btn" onclick="switchAdminTab('users',this)">Nguoi dung</div>
+        <div class="meal-tab" id="tab-foods-btn" onclick="switchAdminTab('foods',this)">Thuc pham</div>
+        <div class="meal-tab" id="tab-verify-btn" onclick="switchAdminTab('verify',this)">Duyet chuyen gia</div>
+      </div>
+
+      <!-- Users Tab -->
+      <div id="tab-users">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-toolbar">
+              <div class="search-input">
+                <input type="text" id="searchUsers" class="form-control" placeholder="Tim nguoi dung..." style="padding-left:36px">
+              </div>
+              <div class="flex" style="gap:8px">
+                <select class="form-control" style="width:auto">
+                  <option>Tat ca vai tro</option>
+                  <option>Nguoi dung</option>
+                  <option>Chuyen gia</option>
+                  <option>Admin</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Nguoi dung</th>
+                    <th>Vai tro</th>
+                    <th>Trang thai</th>
+                    <th>Ngay tao</th>
+                    <th>Thao tac</th>
+                  </tr>
+                </thead>
+                <tbody id="userTableBody">
+                  <tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">Dang tai...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foods Tab -->
+      <div id="tab-foods" style="display:none">
+        <div class="card">
+          <div class="card-body">
+            <div class="table-toolbar">
+              <div class="search-input">
+                <input type="text" id="searchFoods" class="form-control" placeholder="Tim thuc pham..." style="padding-left:36px">
+              </div>
+              <button class="btn btn-primary" id="addFoodBtn">+ Them thuc pham</button>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Bieu tuong</th>
+                    <th>Ten thuc pham</th>
+                    <th>Calo</th>
+                    <th>Protein</th>
+                    <th>Carbs</th>
+                    <th>Chat beo</th>
+                    <th>Thao tac</th>
+                  </tr>
+                </thead>
+                <tbody id="foodTableBody">
+                  <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted)">Dang tai...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verify Tab -->
+      <div id="tab-verify" style="display:none">
+        <div class="card">
+          <div class="card-body">
+            <div class="empty-state">
+              <div class="empty-icon">✅</div>
+              <div class="empty-text">Khong co chuyen gia nao cho duyet</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Food Modal -->
+<div class="modal-overlay" id="foodModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="foodModalTitle">Them thuc pham moi</span>
+      <span class="modal-close" onclick="Modal.close('foodModal')">x</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ten thuc pham</label>
+          <input type="text" id="food-name" class="form-control" placeholder="Com trang">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Danh muc</label>
+          <input type="text" id="food-category" class="form-control" placeholder="Tinh bot">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Bieu tuong (emoji)</label>
+          <input type="text" id="food-emoji" class="form-control" placeholder="🍚">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Calo (per 100g)</label>
+          <input type="number" id="food-calories" class="form-control" placeholder="130">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Protein (g)</label>
+          <input type="number" id="food-protein" class="form-control" placeholder="2.7" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Carbs (g)</label>
+          <input type="number" id="food-carbs" class="form-control" placeholder="28" step="0.1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Chat beo (g)</label>
+          <input type="number" id="food-fat" class="form-control" placeholder="0.3" step="0.1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Xo (g)</label>
+          <input type="number" id="food-fiber" class="form-control" placeholder="0.4" step="0.1">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('foodModal')">Huy</button>
+      <button class="btn btn-primary" id="saveFoodBtn">Luu thuc pham</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Role Modal -->
+<div class="modal-overlay" id="editRoleModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <span class="modal-title">Phan quyen nguoi dung</span>
+      <span class="modal-close" onclick="Modal.close('editRoleModal')">x</span>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editRoleUserId">
+      <div class="form-group">
+        <label class="form-label">Vai tro moi</label>
+        <select id="newRoleSelect" class="form-control">
+          <option value="user">Nguoi dung</option>
+          <option value="expert">Chuyen gia</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="Modal.close('editRoleModal')">Huy</button>
+      <button class="btn btn-admin" id="saveRoleBtn">Luu vai tro</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import '../assets/js/main.js';
+  import UserManagement from '../assets/js/modules/admin/userManagement.js';
+  import FoodManagement from '../assets/js/modules/admin/foodManagement.js';
+  import AdminService from '../assets/js/services/adminService.js';
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    UserManagement.init();
+    FoodManagement.init();
+    // Load dashboard stats
+    try {
+      const stats = await AdminService.getDashboardStats();
+      document.getElementById('stat-total-users').textContent = stats.totalUsers || '--';
+      document.getElementById('stat-experts').textContent = stats.totalExperts || '--';
+      document.getElementById('stat-foods').textContent = stats.totalFoods || '--';
+    } catch(e) {}
+  });
+
+  window.switchAdminTab = function(tab, el) {
+    ['users','foods','verify'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = t === tab ? '' : 'none';
+      document.getElementById('tab-' + t + '-btn').classList.toggle('active', t === tab);
+    });
+  };
+</script>
+</body></html>

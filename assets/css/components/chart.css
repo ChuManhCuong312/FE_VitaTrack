@@ -1,0 +1,19 @@
+/* VITATRACK - CHARTS */
+.chart-container {
+  position:relative; width:100%;
+}
+.chart-wrapper {
+  background: var(--bg-card); border-radius: var(--border-radius-lg);
+  border:1px solid var(--border-color); padding: var(--space-5);
+}
+.chart-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom: var(--space-4);
+}
+.chart-title   { font-size: var(--font-size-base); font-weight: var(--font-weight-semibold); color: var(--text-primary); }
+.chart-legend  { display:flex; gap: var(--space-4); font-size: var(--font-size-xs); }
+.legend-item   { display:flex; align-items:center; gap: var(--space-1); color: var(--text-secondary); }
+.legend-dot    { width:8px; height:8px; border-radius:50%; }
+.chart-tabs    { display:flex; gap: var(--space-1); background: var(--color-gray-100); padding:3px; border-radius: var(--border-radius); }
+.chart-tab     { padding: var(--space-1) var(--space-3); border-radius:5px; font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); color: var(--text-secondary); cursor:pointer; transition: all var(--transition-fast); }
+.chart-tab.active { background: white; color: var(--text-primary); box-shadow: var(--shadow-sm); }

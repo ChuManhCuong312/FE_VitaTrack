@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VitaTrack</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:16px">
+    <div style="width:56px;height:56px;background:var(--color-primary);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px">💚</div>
+    <div style="font-size:24px;font-weight:700;color:var(--text-primary)">Vita<span style="color:var(--color-primary)">Track</span></div>
+    <div class="skeleton" style="width:200px;height:8px;border-radius:4px"></div>
+  </div>
+  <script type="module">
+    import Auth from './assets/js/core/auth.js';
+    document.addEventListener('DOMContentLoaded', () => {
+      if (Auth.isLoggedIn()) {
+        window.location.href = Auth.getHomePage();
+      } else {
+        window.location.href = '/login.html';
+      }
+    });
+  </script>
+</body>
+</html>

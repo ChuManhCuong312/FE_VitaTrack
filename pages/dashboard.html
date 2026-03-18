@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | VitaTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <div class="main-wrapper">
+    <header class="header" id="header"></header>
+
+    <main class="main-content" id="mainContent">
+      <div class="page-container fade-in">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Tong quan suc khoe</h1>
+            <p class="page-subtitle" id="lastUpdated">Dang tai du lieu...</p>
+          </div>
+          <button class="btn btn-sm btn-outline" id="refreshBtn" onclick="Dashboard.init()">
+            Lam moi
+          </button>
+        </div>
+
+        <!-- ALLERGY ALERT (an neu khong co di ung) -->
+        <div class="allergy-alert" id="allergyBanner" style="display:none">
+          <div class="allergy-alert-icon">⚠️</div>
+          <div>
+            <div class="allergy-alert-text">Canh bao di ung</div>
+            <div class="allergy-alert-sub" id="allergyText"></div>
+          </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="stats-grid">
+          <div class="stat-card green">
+            <div class="stat-label">Chi so BMI</div>
+            <div class="stat-value" id="stat-bmi">--</div>
+            <div class="stat-change" id="bmi-status">Dang tinh...</div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-label">Calo nap vao</div>
+            <div>
+              <span class="stat-value" id="stat-calories">--</span>
+              <span class="stat-unit"> kcal</span>
+            </div>
+            <div class="stat-change" id="cal-goal-text">/ -- kcal muc tieu</div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-label">So buoc chan</div>
+            <div>
+              <span class="stat-value" id="stat-steps">--</span>
+              <span class="stat-unit"> buoc</span>
+            </div>
+            <div class="stat-change" id="steps-goal-text">/ 10,000 muc tieu</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-label">Luong nuoc</div>
+            <div>
+              <span class="stat-value" id="stat-water">--</span>
+              <span class="stat-unit"> ml</span>
+            </div>
+            <div class="stat-change" id="water-goal-text">/ 2,500 ml muc tieu</div>
+          </div>
+        </div>
+
+        <!-- CALORIE PROGRESS BAR -->
+        <div class="chart-wrapper" style="margin-bottom:var(--space-4)">
+          <div class="chart-header">
+            <span class="chart-title">Ngan sach calo hom nay</span>
+            <span id="cal-budget-label" style="font-size:var(--font-size-xs);color:var(--text-muted)">--</span>
+          </div>
+          <div class="calorie-progress-section">
+            <div class="progress-label">
+              <span>Nap vao</span><span id="cal-percent-text">0%</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="calorie-progress" style="width:0%"></div>
+            </div>
+            <div class="progress-label" style="margin-top:var(--space-3)">
+              <span>Tieu hao (hoat dong)</span><span id="burned-text">0 kcal</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="burned-progress" style="width:0%;background:var(--color-info)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHARTS + MACRO -->
+        <div class="charts-grid">
+          <!-- Left: line charts -->
+          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+            <div class="chart-wrapper">
+              <div class="chart-header">
+                <span class="chart-title">Lich su calo</span>
+                <div class="chart-tabs">
+                  <span class="chart-tab active" data-period="7d" id="tab7d">7 ngay</span>
+                  <span class="chart-tab" data-period="30d" id="tab30d">30 ngay</span>
+                </div>
+              </div>
+              <div class="chart-container" style="height:180px">
+                <canvas id="calorieChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <div class="chart-header">
+                <span class="chart-title">Bien dong can nang</span>
+              </div>
+              <div class="chart-container" style="height:160px">
+                <canvas id="weightChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: donut + meal list -->
+          <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+            <div class="chart-wrapper">
+              <div class="chart-header">
+                <span class="chart-title">Dinh duong hom nay</span>
+              </div>
+              <div class="chart-container" style="height:160px">
+                <canvas id="macroChart"></canvas>
+              </div>
+              <div class="macro-legend" id="macroLegend">
+                <div class="macro-row">
+                  <span class="macro-label"><span class="macro-dot" style="background:#3B82F6"></span>Protein</span>
+                  <span class="macro-value" id="macro-protein">0g</span>
+                </div>
+                <div class="macro-row">
+                  <span class="macro-label"><span class="macro-dot" style="background:#F59E0B"></span>Carbs</span>
+                  <span class="macro-value" id="macro-carbs">0g</span>
+                </div>
+                <div class="macro-row">
+                  <span class="macro-label"><span class="macro-dot" style="background:#F87171"></span>Fat</span>
+                  <span class="macro-value" id="macro-fat">0g</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="chart-wrapper" style="padding:var(--space-4)">
+              <div class="section-title" style="margin-bottom:var(--space-3)">Thao tac nhanh</div>
+              <div class="quick-actions">
+                <a href="meal-log.html" class="quick-action-btn">
+                  <span class="qa-icon">🍽️</span>
+                  <span class="qa-label">Ghi bua an</span>
+                </a>
+                <a href="activity.html" class="quick-action-btn">
+                  <span class="qa-icon">🏃</span>
+                  <span class="qa-label">Van dong</span>
+                </a>
+                <a href="profile.html" class="quick-action-btn">
+                  <span class="qa-icon">⚖️</span>
+                  <span class="qa-label">Cap nhat can</span>
+                </a>
+                <a href="assistant.html" class="quick-action-btn">
+                  <span class="qa-icon">🤖</span>
+                  <span class="qa-label">Hoi AI</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEAL TIMELINE -->
+        <div class="meal-timeline-section">
+          <div class="section-header">
+            <span class="section-title">Bua an hom nay</span>
+            <a href="meal-log.html" class="section-action">Xem tat ca →</a>
+          </div>
+          <div id="mealList">
+            <div class="empty-state">
+              <div class="empty-icon">🍽️</div>
+              <div class="empty-text">Chua co bua an nao hom nay</div>
+              <a href="meal-log.html" class="empty-cta">+ Them bua an dau tien</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  import Dashboard from '../assets/js/modules/dashboard/dashboard.js';
+  import Auth from '../assets/js/core/auth.js';
+  import Sidebar from '../assets/js/components/sidebar.js';
+  import Navbar from '../assets/js/components/navbar.js';
+
+  // Bao ve trang – chuyen huong neu chua dang nhap
+  if (!Auth.requireAuth()) throw new Error('Not authenticated');
+
+  // Khoi tao layout
+  Sidebar.init();
+  Navbar.init();
+
+  // Xu ly chart tabs
+  document.querySelectorAll('.chart-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      Dashboard.loadCalorieChart(tab.dataset.period || '7d');
+    });
+  });
+
+  // Load dashboard
+  Dashboard.init();
+  window.Dashboard = Dashboard;
+</script>
+</body>
+</html>

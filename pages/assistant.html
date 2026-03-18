@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tro Ly AI | VitaTrack</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/assistant.css">
+</head>
+<body>
+<div class="app-layout">
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar"></aside>
+  <header class="header" id="header"></header>
+  <main class="main-content" id="mainContent" style="display:flex;flex-direction:column">
+    <div class="page-container" style="flex:1;display:flex;flex-direction:column">
+
+      <div class="page-header">
+        <h1 class="page-title">Tro Ly AI VitaTrack</h1>
+        <p class="page-subtitle">Ho tro dinh duong 24/7 - ca nhan hoa theo suc khoe cua ban</p>
+      </div>
+
+      <!-- AI suggestions -->
+      <div class="ai-suggestions" id="suggestions">
+        <span class="ai-suggestion">Toi nen an gi hom nay?</span>
+        <span class="ai-suggestion">Che do an giam can hieu qua?</span>
+        <span class="ai-suggestion">Bai tap tot cho nguoi moi bat dau?</span>
+        <span class="ai-suggestion">Tinh calo bua sang cua toi</span>
+        <span class="ai-suggestion">BMI cua toi co on khong?</span>
+      </div>
+
+      <!-- Chat layout -->
+      <div class="chat-layout">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-bar">
+          <textarea class="chat-input" id="chatInput" rows="1"
+            placeholder="Hoi bat cu dieu gi ve suc khoe, dinh duong, luyen tap..."></textarea>
+          <button class="btn btn-primary" id="sendBtn" style="align-self:flex-end">Gui</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script type="module">
+  import '../assets/js/main.js';
+  import AiChat from '../assets/js/modules/assistant/aiChat.js';
+  document.addEventListener('DOMContentLoaded', () => AiChat.init());
+</script>
+</body></html>

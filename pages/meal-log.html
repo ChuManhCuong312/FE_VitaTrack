@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhat ky an uong | VitaTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/pages/meal-log.css">
+</head>
+<body>
+<div class="app-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <div class="main-wrapper">
+    <header class="header" id="header"></header>
+
+    <main class="main-content" id="mainContent">
+      <div class="page-container fade-in">
+
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Nhat ky an uong</h1>
+            <p class="page-subtitle">Ghi nhan bua an trong 3 buoc don gian</p>
+          </div>
+        </div>
+
+        <!-- DATE SELECTOR -->
+        <div class="date-selector">
+          <button class="date-nav-btn" id="prevDay">&#8592;</button>
+          <input type="date" id="dateInput">
+          <button class="date-nav-btn" id="nextDay">&#8594;</button>
+          <span style="font-size:var(--font-size-xs);color:var(--text-muted)" id="dateLabel"></span>
+        </div>
+
+        <!-- MEAL TYPE TABS (Buoc 1) -->
+        <div class="meal-type-tabs">
+          <div class="meal-tab active" data-meal="breakfast" id="tab-breakfast">
+            <span class="tab-icon">☀️</span>
+            <span>Bua sang</span>
+            <span class="tab-cal" id="cal-breakfast">0 kcal</span>
+          </div>
+          <div class="meal-tab" data-meal="lunch" id="tab-lunch">
+            <span class="tab-icon">🌤️</span>
+            <span>Bua trua</span>
+            <span class="tab-cal" id="cal-lunch">0 kcal</span>
+          </div>
+          <div class="meal-tab" data-meal="dinner" id="tab-dinner">
+            <span class="tab-icon">🌙</span>
+            <span>Bua toi</span>
+            <span class="tab-cal" id="cal-dinner">0 kcal</span>
+          </div>
+          <div class="meal-tab" data-meal="snack" id="tab-snack">
+            <span class="tab-icon">🍎</span>
+            <span>An vat</span>
+            <span class="tab-cal" id="cal-snack">0 kcal</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:var(--space-5)">
+
+          <!-- LEFT: Them thuc pham (Buoc 2 & 3) -->
+          <div>
+            <div class="card" style="padding:var(--space-5)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4)">
+                <h3 style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold)">
+                  Them thuc pham
+                </h3>
+                <button class="btn btn-sm btn-outline" id="toggleUploadBtn">📷 Nhan dang AI</button>
+              </div>
+
+              <!-- AI Upload zone (an mac dinh) -->
+              <div id="aiUploadSection" style="display:none">
+                <div class="ai-badge">✨ AI Vision</div>
+                <div class="ai-upload-zone" id="aiDropZone">
+                  <div class="ai-upload-icon">📸</div>
+                  <div class="ai-upload-title">Chup anh mon an de AI phan tich</div>
+                  <div class="ai-upload-sub">Keo tha hoac click de chon anh (JPG, PNG, max 10MB)</div>
+                  <input type="file" id="foodImageInput" accept="image/*" style="display:none">
+                </div>
+                <div id="aiResult" style="display:none"></div>
+                <div style="text-align:center;margin:var(--space-3) 0;color:var(--text-muted);font-size:var(--font-size-xs)">— hoac tim thu cong —</div>
+              </div>
+
+              <!-- Search (Buoc 2) -->
+              <div class="food-search-bar">
+                <div class="food-search-input">
+                  <span class="search-icon">🔍</span>
+                  <input type="text" id="foodSearch"
+                         placeholder="Tim ten thuc pham... (vi du: com trang, uc ga)"
+                         autocomplete="off">
+                </div>
+              </div>
+
+              <!-- Results dropdown -->
+              <div class="food-results" id="foodResults" style="display:none"></div>
+
+              <!-- Selected food (Buoc 3) -->
+              <div id="selectedFood" style="display:none">
+                <div class="selected-food-card">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                    <div>
+                      <div class="selected-food-name" id="sf-name"></div>
+                      <div class="selected-food-macros">
+                        <span>P: <strong id="sf-protein">0</strong>g</span>
+                        <span>C: <strong id="sf-carbs">0</strong>g</span>
+                        <span>F: <strong id="sf-fat">0</strong>g</span>
+                        <span>/ 100g</span>
+                      </div>
+                    </div>
+                    <button onclick="MealLog.clearSelected()"
+                      style="border:none;background:none;cursor:pointer;color:var(--text-muted);font-size:18px">✕</button>
+                  </div>
+
+                  <!-- Allergy warning -->
+                  <div id="allergyWarning" style="display:none" class="allergy-warning">
+                    ⚠️ <span id="allergyWarnText">Canh bao di ung!</span>
+                  </div>
+
+                  <div class="quantity-row">
+                    <label style="font-size:var(--font-size-sm);color:var(--text-secondary)">Khau phan (g):</label>
+                    <input type="number" id="quantityInput" class="quantity-input" value="100" min="1" max="5000">
+                    <div class="calorie-preview">
+                      ≈ <strong id="calPreview">0</strong> kcal
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary" id="addFoodBtn" style="width:100%">
+                  Them vao bua an
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Diary cho ngay / bua da chon -->
+          <div class="card" style="padding:var(--space-5)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4)">
+              <h3 style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold)">
+                <span id="currentMealLabel">Bua sang</span>
+              </h3>
+              <span style="font-size:var(--font-size-xs);color:var(--text-muted)" id="mealTotalCal">0 kcal</span>
+            </div>
+            <div id="diaryList">
+              <div class="empty-state">
+                <div class="empty-icon">🍽️</div>
+                <div class="empty-text">Chua co thuc pham nao</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  import MealLog from '../assets/js/modules/meal-log/mealLog.js';
+  import Auth from '../assets/js/core/auth.js';
+  import Sidebar from '../assets/js/components/sidebar.js';
+  import Navbar from '../assets/js/components/navbar.js';
+
+  if (!Auth.requireAuth()) throw new Error('Not authenticated');
+  Sidebar.init();
+  Navbar.init();
+  MealLog.init();
+  window.MealLog = MealLog;
+</script>
+</body>
+</html>

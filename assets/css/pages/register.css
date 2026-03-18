@@ -1,0 +1,20 @@
+/* VITATRACK - REGISTER PAGE */
+.register-steps {
+  display:flex; align-items:center; justify-content:center;
+  gap: var(--space-2); margin-bottom: var(--space-8);
+}
+.step-item  { display:flex; align-items:center; gap: var(--space-2); }
+.step-num   {
+  width:28px; height:28px; border-radius:50%; display:flex;
+  align-items:center; justify-content:center; font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold); border:2px solid var(--border-color);
+  color: var(--text-muted); background: white; transition: all var(--transition-normal);
+}
+.step-num.active   { border-color: var(--color-primary); color: var(--color-primary); }
+.step-num.done     { border-color: var(--color-primary); background: var(--color-primary); color: white; }
+.step-label { font-size: var(--font-size-xs); color: var(--text-muted); }
+.step-label.active { color: var(--color-primary); font-weight: var(--font-weight-medium); }
+.step-connector    { width:32px; height:1px; background: var(--border-color); flex-shrink:0; }
+.step-connector.done { background: var(--color-primary); }
+.step-panel { display:none; }
+.step-panel.active { display:block; }

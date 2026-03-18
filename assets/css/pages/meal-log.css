@@ -1,0 +1,291 @@
+/* =============================================
+   VITATRACK - MEAL LOG (Minimalism Redesign)
+   3-step flow: Chon bua -> Tim thuc pham -> Luu
+   ============================================= */
+
+/* Meal type tabs */
+.meal-type-tabs {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--color-gray-100);
+  border-radius: var(--border-radius-md);
+  padding: 4px;
+  margin-bottom: var(--space-6);
+  overflow-x: auto;
+}
+.meal-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+.meal-tab:hover   { color: var(--text-primary); }
+.meal-tab.active  {
+  background: var(--bg-white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+.meal-tab .tab-icon { font-size: 16px; }
+.meal-tab .tab-cal  {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary-deep);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Date selector */
+.date-selector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.date-selector input[type="date"] {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--bg-white);
+  cursor: pointer;
+}
+.date-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background: var(--bg-white);
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: all var(--transition-fast);
+}
+.date-nav-btn:hover { border-color: var(--color-primary); color: var(--color-primary-deep); }
+
+/* Food search bar */
+.food-search-bar {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.food-search-input {
+  flex: 1;
+  position: relative;
+}
+.food-search-input input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4) var(--space-3) 40px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--bg-white);
+  transition: border-color var(--transition-fast);
+}
+.food-search-input input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* Food search results */
+.food-results {
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-4);
+}
+.food-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  border-bottom: 1px solid var(--border-color-light);
+}
+.food-result-item:last-child { border-bottom: none; }
+.food-result-item:hover { background: var(--color-primary-bg); }
+.food-result-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+.food-result-meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+.food-result-cal {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-deep);
+  white-space: nowrap;
+}
+
+/* Selected food card (step 2) */
+.selected-food-card {
+  background: var(--color-primary-bg);
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.selected-food-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+.selected-food-macros {
+  display: flex;
+  gap: var(--space-4);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+.quantity-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.quantity-input {
+  width: 90px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-family);
+  text-align: center;
+  background: var(--bg-white);
+}
+.quantity-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.calorie-preview {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+.calorie-preview strong { color: var(--color-primary-deep); }
+
+/* Allergy warning */
+.allergy-warning {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: #FEF2F2;
+  border: 1.5px solid #FECACA;
+  border-radius: var(--border-radius);
+  font-size: var(--font-size-sm);
+  color: #991B1B;
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--space-3);
+  animation: pulse-warning 1s ease-in-out 2;
+}
+@keyframes pulse-warning {
+  0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+  50%      { box-shadow: 0 0 0 4px rgba(239,68,68,0.2); }
+}
+
+/* AI Image upload */
+.ai-upload-zone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-8);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: var(--color-gray-50);
+  margin-bottom: var(--space-4);
+}
+.ai-upload-zone:hover, .ai-upload-zone.dragover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+.ai-upload-icon  { font-size: 32px; margin-bottom: var(--space-2); }
+.ai-upload-title { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); color: var(--text-primary); }
+.ai-upload-sub   { font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--space-1); }
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #EDE9FE;
+  color: #7C3AED;
+  border-radius: var(--border-radius-full);
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+}
+
+/* Diary view */
+.diary-meal-group {
+  margin-bottom: var(--space-5);
+}
+.diary-meal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-color);
+}
+.diary-meal-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+.diary-meal-total {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+.diary-food-row {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) 0;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--border-color-light);
+}
+.diary-food-row:last-child { border-bottom: none; }
+.diary-food-name  { flex: 1; font-size: var(--font-size-sm); color: var(--text-primary); }
+.diary-food-qty   { font-size: var(--font-size-xs); color: var(--text-muted); white-space: nowrap; }
+.diary-food-cal   { font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); color: var(--color-primary-deep); white-space: nowrap; }
+.diary-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 4px;
+  border-radius: var(--border-radius-sm);
+  transition: color var(--transition-fast);
+}
+.diary-delete-btn:hover { color: var(--color-danger); }
